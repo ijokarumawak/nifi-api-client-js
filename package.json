@@ -4,5 +4,9 @@
   "dependencies": {
     "request": "*",
     "js-yaml": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ijokarumawak/nifi-api-client-js.git"
   }
 }
