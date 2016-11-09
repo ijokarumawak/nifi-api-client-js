@@ -1,2 +1,2 @@
-# nifi-js-web-api-client
+# nifi-api-client-js
 Javascript NiFi Web API client.
