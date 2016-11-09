@@ -1,0 +1,8 @@
+{
+  "name": "nifi-api-client",
+  "version": "0.0.1",
+  "dependencies": {
+    "request": "*",
+    "js-yaml": "*"
+  }
+}
