@@ -207,11 +207,11 @@ var getComponent = function(path, callback) {
 }
 
 var getProcessor = function(uuid, callback) {
-  getComponent('/processors/' + uuid, callback);
+  this.getComponent('/processors/' + uuid, callback);
 }
 
 var getProcessGroup = function(uuid, callback) {
-  getComponent('/process-groups/' + uuid, callback);
+  this.getComponent('/process-groups/' + uuid, callback);
 }
 
 var getProcessGroupFlow = function(uuid, callback) {
