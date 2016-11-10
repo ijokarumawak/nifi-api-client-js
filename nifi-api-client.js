@@ -4,17 +4,23 @@ var request = require('request');
 var yaml = require('js-yaml');
 var debug = true;
 
-var fromYamlFile = function(filepath) {
+var fromYamlFile = function(filepath, configName) {
   var conf = yaml.safeLoad(fs.readFileSync(filepath));
+  if (typeof(configName) === 'string') {
+    conf = conf[configName];
+  }
   return new NiFiApi(conf);
 }
 
 var NiFiApi = function(conf) {
   this.conf = conf;
+  this.checkServerIdentity = true;
   if (conf.secure) {
     if (conf.caCert) this.caCert = fs.readFileSync(conf.caCert);
     if (conf.clientCert) this.clientCert = fs.readFileSync(conf.clientCert);
     if (conf.clientKey) this.clientKey = fs.readFileSync(conf.clientKey);
+    if (conf.clientKeyPass) this.clientKeyPass = conf.clientKeyPass;
+    if (typeof(conf.checkServerIdentity) === 'boolean') this.checkServerIdentity = conf.checkServerIdentity;
   }
 
   this.getApiRoot = function() {
@@ -43,6 +49,10 @@ var NiFiApi = function(conf) {
       o.ca = this.caCert;
       o.cert = this.clientCert;
       o.key = this.clientKey;
+      o.passphrase = this.clientKeyPass;
+      if (!this.checkServerIdentity) {
+        o.checkServerIdentity = (host, cert) => {};
+      }
     }
 
     return request(o, callback);

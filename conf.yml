@@ -1,6 +1,17 @@
-host: localhost
-port: 8080
-secure: false
-caCert: 
-clientCert: 
-clientKey: 
+plain:
+  host: localhost
+  port: 8080
+  secure: false
+  caCert: 
+  clientCert: 
+  clientKey: 
+secure:
+  host: localhost
+  port: 8443
+  secure: true
+  checkServerIdentity: true
+  caCert: ca-cert.pem
+  clientCert: client-cert.pem
+  clientKey: client-key.pem
+  clientKeyPass: password
+
