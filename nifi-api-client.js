@@ -2,7 +2,6 @@ var fs = require('fs');
 var path = require('path');
 var request = require('request');
 var yaml = require('js-yaml');
-var debug = true;
 
 var fromYamlFile = function(filepath, configName) {
   var conf = yaml.safeLoad(fs.readFileSync(filepath));
@@ -21,6 +20,10 @@ var NiFiApi = function(conf) {
     if (conf.clientKey) this.clientKey = fs.readFileSync(conf.clientKey);
     if (conf.clientKeyPass) this.clientKeyPass = conf.clientKeyPass;
     if (typeof(conf.checkServerIdentity) === 'boolean') this.checkServerIdentity = conf.checkServerIdentity;
+  }
+
+  this.debug = function(msg, obj) {
+    if (this.conf.debug) console.log(JSON.stringify([new Date(), msg, obj]));
   }
 
   this.getApiRoot = function() {
@@ -100,7 +103,7 @@ var uploadTemplate = function(pgId, filepath, callback) {
       callback(err);
       return;
     }
-    if(debug) console.log(res.statusCode);
+    this.debug('uploadTemplate', {statusCode: res.statusCode});
     switch (res.statusCode) {
       case 201:
         var match = /templates\/(.*)/.exec(res.headers.location);
@@ -131,7 +134,7 @@ var instanciateTemplate = function(pgId, templateId, callback) {
       callback(err);
       return;
     }
-    if(debug) console.log(res.statusCode);
+    this.debug('instanciateTemplate', {statusCode: res.statusCode});
     switch (res.statusCode) {
       case 201:
         return callback(null, body.flow.processGroups[0].id);
@@ -208,6 +211,7 @@ var getComponent = function(path, callback) {
       callback(err);
       return;
     }
+    this.debug('getComponent', {statusCode: res.statusCode});
     if (res.statusCode == 200) {
       callback(null, JSON.parse(body));
     } else {
@@ -239,7 +243,7 @@ var postComponent = function(path, component, callback) {
       callback(err);
       return;
     }
-    if(debug) console.log(res.statusCode);
+    this.debug('postComponent', {statusCode: res.statusCode});
     if (res.statusCode == 201) {
       callback(null, res.headers.location);
     } else {
@@ -258,7 +262,7 @@ var putComponent = function(path, component, callback) {
       callback(err);
       return;
     }
-    if(debug) console.log(res.statusCode);
+    this.debug('putComponent', {statusCode: res.statusCode});
     if (res.statusCode == 200) {
       callback(null);
     } else {
@@ -297,7 +301,7 @@ var deleteComponent = function(path, revision, callback) {
       callback(err);
       return;
     }
-    if(debug) console.log(res.statusCode);
+    this.debug('deleteComponent', {statusCode: res.statusCode});
     if (res.statusCode == 200) {
       callback(null);
     } else {
@@ -380,7 +384,7 @@ var createConnection = function(clientId, parentPgId, destinationProcessorId, ta
     },
   };
 
-  console.log('update conn', conn);
+  this.debug('update conn', conn);
   this.postComponent('/process-groups/' + parentPgId + '/connections', conn, callback);
 }
 

@@ -5,6 +5,7 @@ plain:
   caCert: 
   clientCert: 
   clientKey: 
+  debug: false
 secure:
   host: localhost
   port: 8443
