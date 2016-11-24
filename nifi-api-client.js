@@ -80,6 +80,8 @@ var NiFiApi = function(conf) {
   this.putProcessGroup = putProcessGroup;
   this.moveProcessGroup = moveProcessGroup;
 
+  // Find
+  this.findProcessGroupIdByName = findProcessGroupIdByName;
   this.findInputPortIdByName = findInputPortIdByName;
   this.findOutputPortIdByName = findOutputPortIdByName;
 
@@ -307,6 +309,21 @@ var deleteComponent = function(path, revision, callback) {
     } else {
       callback(res);
     }
+  });
+}
+
+var findProcessGroupIdByName = function(pgName, callback) {
+  this.searchComponent(pgName, (err, result) => {
+    if (err) return callback(err);
+
+    var targetPgs = result.processGroupResults.filter(pg => {
+      return pgName === pg.name;
+    });
+    if (targetPgs.length !== 1) {
+      return callback(new Error('Could not identify target process group by name:' + pgName));
+    }
+
+    return callback(null, targetPgs[0].id);
   });
 }
 
