@@ -14,7 +14,7 @@ $ npm install
 
 ## How to use
 
-```
+```js
 // Specify a dir you downloaded the nifi-api-client-js project
 var nifiApiClient = require('../nifi-api-client-js');
 
